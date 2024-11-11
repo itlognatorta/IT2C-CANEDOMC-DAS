@@ -55,7 +55,9 @@ public class IT2CCANEDOMCDAS {
 
                 case 4:
                     
-  
+                     Reports rep = new Reports();   
+                     rep.Report();
+                     
                     
                     
                     

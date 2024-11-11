@@ -124,7 +124,7 @@ public class Customer {
                     return;
                     
                     default:
-                    System.out.println("Invalid option. Please try again.");
+                    System.out.println("Invalid option. Please try again. ");              
                     break;
             }
             

@@ -191,7 +191,34 @@ public static Connection connectDB() {
         return result;
     }
 
+     public void viewRecords1(String query, String[] headers, String[] columns, int customerId) {
+         
+           try (Connection conn = this.connectDB();        
+            PreparedStatement pstmt = conn.prepareStatement(query)) {
+            // Set the customer ID parameter in the query
+            pstmt.setInt(1, customerId);
+            ResultSet rs = pstmt.executeQuery();
+
+            // Print column headers
+            for (String header : headers) {
+                System.out.print(header + "\t");
+            }
+            System.out.println();
+
+            // Process the result set and print each row
+            while (rs.next()) {
+                for (String column : columns) {
+                    System.out.print(rs.getString(column) + "\t");
+                }
+                System.out.println();
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error fetching records: " + e.getMessage());
+        }
+    }
+}
+
     
 
     
-}

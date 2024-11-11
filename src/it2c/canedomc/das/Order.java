@@ -145,7 +145,7 @@ public class Order {
         
         }
         
-         private void updateOrders(){
+        private void updateOrders(){
         Scanner sc = new Scanner(System.in);
         Order or = new Order();
         Customer cs = new Customer();
@@ -162,52 +162,26 @@ public class Order {
                 oid = sc.nextInt();
             }
         
-        cs.viewCustomers();
+        or.viewOrders();
+        
+             System.out.print("Enter new Status: ");
+             String status = sc.next();
+             
+             if (status.equals("Cancel") || status.equals("Done")) {
+            System.out.println("Status cannot be updated to '" + status + "' as the order is already marked as " + status + ".");
+                 
+            } else {
+                        
+                 
+                 System.out.println("Status Successfully Updated");
+                         
+                         }   
             
-            System.out.print("Enter New Selected Customer ID: ");
-            int ncid = sc.nextInt();
-            
-            String csql = "SELECT id FROM customer WHERE id = ?";
-            while(conf.getSingleValue(csql, ncid)== 0){
-                System.out.print("Customer does not exist, Please Select Again: " );
-                ncid = sc.nextInt();
-            }
-                pr.viewProducts();
+              String sql = "UPDATE tbl_order SET o_status = ? WHERE o_id = ?";
         
-        System.out.print("Enter New Selected Product ID: ");
-            int npid = sc.nextInt();
-            
-            String psql = "SELECT p_id FROM product WHERE p_id = ?";
-            while(conf.getSingleValue(psql, npid)== 0){
-                System.out.print("Product does not exist, Please Select Again: ");
-                npid = sc.nextInt();
-        }
-
-        
-        System.out.print("Enter new Quantity:");
-        double nquant = sc.nextDouble();
-        
-         String priceqry = "SELECT p_price FROM product WHERE p_id = ?";
-            double price = conf.getSingleValue(priceqry, npid);
-            double due = price * nquant;
-                    
-            System.out.println("-----------------------");
-            System.out.println("Total Due: "+due);
-            System.out.println("-----------------------");
-                                                                      
-            
-            LocalDate currdate = LocalDate.now();
-            DateTimeFormatter format = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-            String date = currdate.format(format);
-            
-            String status = "Pending";
-
-        
-        String sql = "UPDATE tbl_order SET id = ?, p_id = ?, o_quantity = ?, o_due = ?, o_date = ?, o_status = ? WHERE o_id = ?";
-        
-        conf.updateRecords(sql, ncid, npid, nquant, due, date, status, oid);
-        
-        
+                   
+                   conf.updateRecords(sql, status, oid);
+              
     }
          
           private void deleteOrders() {      
