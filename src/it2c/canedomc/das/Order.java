@@ -162,25 +162,34 @@ public class Order {
                 oid = sc.nextInt();
             }
         
-        or.viewOrders();
         
-             System.out.print("Enter new Status: ");
-             String status = sc.next();
-             
-             if (status.equals("Cancel") || status.equals("Done")) {
-            System.out.println("Status cannot be updated to '" + status + "' as the order is already marked as " + status + ".");
-                 
+        
+              String statusQuery = "SELECT o_status FROM tbl_order WHERE o_id = ?";
+              String currentStatus = conf.getSingleStringValue(statusQuery, oid);
+
+    
+            or.viewOrders();
+
+            System.out.print("Enter new Status: ");
+            String newStatus = sc.next();
+
+    
+            if (currentStatus.equalsIgnoreCase("Cancel") || currentStatus.equalsIgnoreCase("Done")) {
+                System.out.println("Status cannot be updated as the order is already marked as '" + currentStatus + "'.");
+             } else if (newStatus.equalsIgnoreCase("Cancel") || newStatus.equalsIgnoreCase("Done")) {
+        
+            String sql = "UPDATE tbl_order SET o_status = ? WHERE o_id = ?";
+             conf.updateRecords(sql, newStatus, oid);
+            System.out.println("Status Successfully Updated to '" + newStatus + "'.");
             } else {
-                        
-                 
-                 System.out.println("Status Successfully Updated");
+       
+            String sql = "UPDATE tbl_order SET o_status = ? WHERE o_id = ?";
+            conf.updateRecords(sql, newStatus, oid);
+            System.out.println("Status Successfully Updated to '" + newStatus + "'.");
+    }
                          
-                         }   
+                         
             
-              String sql = "UPDATE tbl_order SET o_status = ? WHERE o_id = ?";
-        
-                   
-                   conf.updateRecords(sql, status, oid);
               
     }
          

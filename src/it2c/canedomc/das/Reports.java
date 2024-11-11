@@ -41,13 +41,13 @@ public class Reports {
         }
 
        
-        String query = "SELECT o_id, p_name, o_due, o_date, o_status FROM tbl_order " 
-                 
+        String query = "SELECT o_id, fname, p_name, o_due, o_date, o_status FROM tbl_order " 
+                + "LEFT JOIN customer ON customer.id = tbl_order.id " 
                 + "LEFT JOIN product ON product.p_id = tbl_order.p_id " 
                 + "WHERE tbl_order.id = ?";
         
-        String[] hdrs = {"Order ID", "Product Name", "Due Amount", "Order Date", "Order Status"};
-        String[] colmns = {"o_id",      "p_name",      "o_due",       "o_date",     "o_status"};
+        String[] hdrs = {"Order ID", "Customer's Name", "Product Name", "Due Amount", "Order Date", "Order Status"};
+        String[] colmns = {"o_id",     "fname",      "p_name",      "o_due",       "o_date",     "o_status"};
         
         System.out.println("=== SPECIFIC REPORT FOR CUSTOMER ID: " + customerId + " ===");
         conf.viewRecords1(query, hdrs, colmns, customerId);
@@ -63,9 +63,9 @@ public class Reports {
          System.out.println("-----------------------");
          System.out.println("   ORDER REPORTS    ");
          System.out.println("-----------------------");
-         System.out.print("1.GENERALALIZE REPORTS");
-         System.out.print("2.SPECIFIC REPORTS");
-         System.out.print("3.EXIT REPORTS PANEL");
+         System.out.println("1.GENERALALIZE REPORTS");
+         System.out.println("2.SPECIFIC REPORTS");
+         System.out.println("3.EXIT REPORTS PANEL");
          
          System.out.print("Enter action:");
          int action = sc.nextInt();

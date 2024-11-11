@@ -217,7 +217,23 @@ public static Connection connectDB() {
             System.out.println("Error fetching records: " + e.getMessage());
         }
     }
+
+      public String getSingleStringValue(String query, int oid) {
+        String result = null;
+          try (Connection conn = this.connectDB();        
+            PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setInt(1, oid);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    result = rs.getString(1); 
+                }
+            }
+        } catch (SQLException e) {
+        }
+        return result; 
+    }
 }
+
 
     
 
