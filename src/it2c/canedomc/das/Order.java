@@ -179,17 +179,13 @@ public class Order {
              } else if (newStatus.equalsIgnoreCase("Cancel") || newStatus.equalsIgnoreCase("Done")) {
         
             String sql = "UPDATE tbl_order SET o_status = ? WHERE o_id = ?";
-             conf.updateRecords(sql, newStatus, oid);
+            conf.updateRecords(sql, newStatus, oid);
             System.out.println("Status Successfully Updated to '" + newStatus + "'.");
             } else {
        
-            String sql = "UPDATE tbl_order SET o_status = ? WHERE o_id = ?";
-            conf.updateRecords(sql, newStatus, oid);
-            System.out.println("Status Successfully Updated to '" + newStatus + "'.");
-    }
+             }
                          
-                         
-            
+                               
               
     }
          
