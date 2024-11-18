@@ -68,10 +68,17 @@ public class Order {
             }
             
           
-            System.out.print("Do you want to continue? (yes/no): ");
+            System.out.println("Do you want to continue? (yes/no): ");
             response = sc.next();
-            
-        }while(response.equals("yes"));
+
+   
+    while (!response.equalsIgnoreCase("yes") && !response.equalsIgnoreCase("no")) {
+        System.out.println("Invalid input! Please answer only 'yes' or 'no'.");
+        System.out.print("Do you want to continue? (yes/no): ");
+        response = sc.next();
+    }
+
+} while (response.equalsIgnoreCase("yes"));
         
         
     }

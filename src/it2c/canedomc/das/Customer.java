@@ -7,15 +7,31 @@ public class Customer {
     public void addCustomers(){
         Scanner sc = new Scanner(System.in);
         config conf = new config(); 
-        System.out.println("Customers First name: ");
+        System.out.print("Customers First name: ");
         String fname = sc.next();
-        System.out.println("Customers Last name: ");
+        System.out.print("Customers Last name: ");
         String lname = sc.next();
-        System.out.println("Customers Email: ");
-        String email = sc.next();
-        System.out.println("Customers Contact Number: ");
-        String contact = sc.next();
-        System.out.println("Customers Address: ");
+        String email;
+    while (true) {
+        System.out.print("Customers Email (e.g., example@domain.com): ");
+         email = sc.next();
+        if (email.matches("^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,6}$")) { // Email format regex
+            break;
+        } else {
+            System.out.print("Invalid email format! Please try again.");
+        }
+    }       
+    String contact;
+    while (true) {
+        System.out.print("Customers Contact Number (digits only): ");
+        contact = sc.next();
+        if (contact.matches("\\d+")) { 
+            break;
+        } else {
+            System.out.print("Invalid input! Please enter digits only.");
+        }
+    }
+        System.out.print("Customers Address: ");
         String address = sc.next();
         
         String sql = "INSERT INTO customer (fname, lname, email, contactnum, address) VALUES (?, ?, ?, ?, ?)";
@@ -43,11 +59,27 @@ public class Customer {
         System.out.println("Enter new Customer Last Name:");
         String ulname = sc.next();
         
-        System.out.println("Enter new Customer Email:");
-        String uemail = sc.next();
+         String uemail;
+    while (true) {
+        System.out.print("Customers Email (e.g., example@domain.com): ");
+         uemail = sc.next();
+        if (uemail.matches("^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,6}$")) { 
+            break;
+        } else {
+            System.out.print("Invalid email format! Please try again.");
+        }
+    }
         
-        System.out.println("Enter new Customer Contact Number:");
-        String ucontact = sc.next();
+         String ucontact;
+    while (true) {
+        System.out.print("Customers Contact Number (digits only): ");
+        ucontact = sc.next();
+        if (ucontact.matches("\\d+")) { 
+            break;
+        } else {
+            System.out.print("Invalid input! Please enter digits only.");
+        }
+    }
         
         System.out.println("Enter new Customer Address:");
         String uaddress = sc.next();
@@ -57,7 +89,7 @@ public class Customer {
         config conf = new config();
         conf.updateRecords(sql, ufname, ulname, uemail, ucontact, uaddress, id);
         
-        
+    
     }
 
     private void deleteCustomers() {      
@@ -131,8 +163,15 @@ public class Customer {
           
             System.out.println("Do you want to continue? (yes/no): ");
             response = sc.next();
-            
-        }while(response.equals("yes"));
+
+   
+    while (!response.equalsIgnoreCase("yes") && !response.equalsIgnoreCase("no")) {
+        System.out.println("Invalid input! Please answer only 'yes' or 'no'.");
+        System.out.print("Do you want to continue? (yes/no): ");
+        response = sc.next();
+    }
+
+} while (response.equalsIgnoreCase("yes"));
         
              
         
