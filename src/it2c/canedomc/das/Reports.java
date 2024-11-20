@@ -67,12 +67,29 @@ public class Reports {
          System.out.println("2.SPECIFIC REPORTS");
          System.out.println("3.EXIT REPORTS PANEL");
          
-         System.out.print("Enter action:");
-         int action = sc.nextInt();
+         
+              int act = 0;
+
+            while (act < 1 || act > 3) {
+                System.out.print("Enter action: ");
+                
+                if (sc.hasNextInt()) {
+                    act = sc.nextInt();
+
+                    
+                    if (act < 1 || act > 3) {
+                        System.out.println("Invalid option! Please enter a number 1-5 only.");
+                    }
+                } else {
+                   
+                    System.out.println("Invalid input. Please enter a valid number.");
+                    sc.next(); 
+                }
+            }
          
          Reports rep = new Reports();
          
-          switch(action){
+          switch(act){
                 
                
                 case 1:

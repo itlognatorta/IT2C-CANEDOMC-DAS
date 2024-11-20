@@ -23,10 +23,26 @@ public class IT2CCANEDOMCDAS {
             System.out.println("3. ORDER");
             System.out.println("4. REPORTS");
             System.out.println("5. EXIT");
-
-            System.out.print("Enter action: ");
-            int act = sc.nextInt();
             
+              int act = 0;
+
+            while (act < 1 || act > 5) {
+                System.out.print("Enter action: ");
+                
+                if (sc.hasNextInt()) {
+                    act = sc.nextInt();
+
+                    
+                    if (act < 1 || act > 5) {
+                        System.out.println("Invalid option! Please enter a number 1-5 only.");
+                    }
+                } else {
+                   
+                    System.out.println("Invalid input. Please enter a valid number.");
+                    sc.next(); 
+                }
+            }
+ 
 
 
             switch (act) {
