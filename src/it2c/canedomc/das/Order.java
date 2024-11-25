@@ -4,6 +4,7 @@ package it2c.canedomc.das;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
+import static jdk.nashorn.tools.ShellFunctions.input;
 
 public class Order {
    
@@ -103,36 +104,72 @@ public class Order {
             Scanner sc = new Scanner(System.in);
             config conf = new config();
             Customer cust = new Customer();
+            Product prod = new Product();
             
             System.out.println("-------------------");
             System.out.println("CUSTOMER TABLE");
             cust.viewCustomers();
-            
+
+    int cid = 0;
+    boolean validCustomer = false;
+
+  
+    while (!validCustomer) {
+        try {
             System.out.print("Enter Selected Customer ID: ");
-            int cid = sc.nextInt();
-            
-            String csql = "SELECT id FROM customer WHERE id = ?";
-            while(conf.getSingleValue(csql, cid)== 0){
-                System.out.print("Customer does not exist, Please Select Again: " );
-                cid = sc.nextInt();
-            }            
-            
-            Product prod = new Product();
-            System.out.println("-------------------");
-            System.out.println("PRODUCT TABLE");
-            prod.viewProducts();
-            
-             System.out.print("Enter Selected Product ID: ");
-            int pid = sc.nextInt();
-            
-            String psql = "SELECT p_id FROM product WHERE p_id = ?";
-            while(conf.getSingleValue(psql, pid)== 0){
-                System.out.print("Product does not exist, Please Select Again: ");
-                pid = sc.nextInt();
+            cid = Integer.parseInt(sc.nextLine());
+            String csql = "SELECT COUNT(*) FROM customer WHERE id = ?";
+            if (conf.getSingleValue(csql, cid) > 0) {
+                validCustomer = true;
+            } else {
+                System.out.println("Customer does not exist. Please try again.");
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input. Please enter a valid Customer ID.");
         }
+    }
+
+    System.out.println("-------------------");
+    System.out.println("PRODUCT TABLE");
+    prod.viewProducts();
+
+    int pid = 0;
+    boolean validProduct = false;
+
+ 
+    while (!validProduct) {
+        try {
+            System.out.print("Enter Selected Product ID: ");
+            pid = Integer.parseInt(sc.nextLine());
+            String psql = "SELECT COUNT(*) FROM product WHERE p_id = ?";
+            if (conf.getSingleValue(psql, pid) > 0) {
+                validProduct = true;
+            } else {
+                System.out.println("Product does not exist. Please try again.");
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input. Please enter a valid Product ID.");
+        }
+    }
+
+    double quantity = 0;
+    boolean validQuantity = false;
+
+    
+    while (!validQuantity) {
+        try {
             System.out.print("Enter quantity: ");
-            double quantity = sc.nextDouble();
-            
+            quantity = Double.parseDouble(sc.nextLine());
+            if (quantity > 0) {
+                validQuantity = true;
+            } else {
+                System.out.println("Quantity must be greater than 0. Please try again.");
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input. Please enter a numeric quantity.");
+        }
+    }     
+        
             String priceqry = "SELECT p_price FROM product WHERE p_id = ?";
             double price = conf.getSingleValue(priceqry, pid);
             double due = price * quantity;
@@ -172,56 +209,97 @@ public class Order {
         private void updateOrders(){
         Scanner sc = new Scanner(System.in);
         Order or = new Order();
-        Customer cs = new Customer();
-        Product pr = new Product();
         config conf = new config();
         
         
-        System.out.print("Enter Order ID: ");
-        int oid = sc.nextInt();
-        
-        String osql = "SELECT o_id FROM tbl_order WHERE o_id = ?";
-            while(conf.getSingleValue(osql, oid)== 0){
-                System.out.print("Order ID does not exist, Please Select Again: " );
-                oid = sc.nextInt();
-            }
-        
-        
-        
-              String statusQuery = "SELECT o_status FROM tbl_order WHERE o_id = ?";
-              String currentStatus = conf.getSingleStringValue(statusQuery, oid);
+       int oid = 0;
+    boolean validOrder = false;
 
-    
-            or.viewOrders();
-
-            System.out.print("Enter new Status: ");
-            String newStatus = sc.next();
-
-    
-            if (currentStatus.equalsIgnoreCase("Cancel") || currentStatus.equalsIgnoreCase("Done")) {
-                System.out.println("Status cannot be updated as the order is already marked as '" + currentStatus + "'.");
-             } else if (newStatus.equalsIgnoreCase("Cancel") || newStatus.equalsIgnoreCase("Done")) {
-        
-            String sql = "UPDATE tbl_order SET o_status = ? WHERE o_id = ?";
-            conf.updateRecords(sql, newStatus, oid);
-            System.out.println("Status Successfully Updated to '" + newStatus + "'.");
+   
+    while (!validOrder) {
+        try {
+            System.out.print("Enter Order ID: ");
+            oid = Integer.parseInt(sc.nextLine());
+            
+            String osql = "SELECT COUNT(*) FROM tbl_order WHERE o_id = ?";
+            if (conf.getSingleValue(osql, oid) > 0) { 
+                validOrder = true;
             } else {
+                System.out.println("Order ID does not exist. Please try again.");
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input. Please enter a valid numeric Order ID.");
+        }
+    }
+
+   
+    String statusQuery = "SELECT o_status FROM tbl_order WHERE o_id = ?";
+    String currentStatus = conf.getSingleStringValue(statusQuery, oid);
+
+    System.out.println("-------------------");
+    or.viewOrders();
+
+   
+    String newStatus = "";
+    boolean validStatus = false;
+
+    while (!validStatus) {
+        System.out.print("Enter new Status (Cancel, Pending, Done): ");
+        newStatus = sc.nextLine().trim();
+
        
-             }
-                         
+        if (!newStatus.equalsIgnoreCase("Cancel") && 
+            !newStatus.equalsIgnoreCase("Pending") && 
+            !newStatus.equalsIgnoreCase("Done")) {
+            System.out.println("Invalid status. Please input valid Status. Cancel,Pending,Done .");
+        } else if (currentStatus.equalsIgnoreCase("Cancel") || currentStatus.equalsIgnoreCase("Done")) {
+            System.out.println("Status cannot be updated as the order is already marked as '" + currentStatus + "'.");
+            return; 
+        } else if (currentStatus.equalsIgnoreCase(newStatus)) {
+            System.out.println("The order is already marked as '" + currentStatus + "'. No changes made.");
+            return; 
+        } else {
+            validStatus = true; 
+        }
+    }
+
+   
+    String sql = "UPDATE tbl_order SET o_status = ? WHERE o_id = ?";
+    conf.updateRecords(sql, newStatus, oid);
+
+    System.out.println("Status successfully updated to '" + newStatus + "'.");
+}
                                
               
-    }
+    
          
           private void deleteOrders() {      
             Scanner sc = new Scanner(System.in);        
-            System.out.print("Enter Order ID to Delete: ");
-            int oid = sc.nextInt();
-
-            String sqlDelete = "DELETE FROM tbl_order WHERE o_id = ?";
-        
             config conf = new config();
-            conf.deleteRecords(sqlDelete, oid);
 
+            int oid = 0;
+            boolean validInput = false;
+
+            while (!validInput) {
+            try {
+            System.out.print("Enter Order ID to Delete: ");
+            oid = Integer.parseInt(sc.nextLine()); 
+
+           
+            String sqlCheck = "SELECT COUNT(*) FROM tbl_order WHERE o_id = ?";
+            if (conf.getSingleValue(sqlCheck, oid) > 0) { 
+                validInput = true; 
+            } else {
+                System.out.println("Order ID does not exist. Please try again.");
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input. Please enter a valid numeric Order ID.");
+        }
+    }
+
+   
+    String sqlDelete = "DELETE FROM tbl_order WHERE o_id = ?";
+    conf.deleteRecords(sqlDelete, oid);
+    System.out.println("Order ID " + oid + " has been successfully deleted.");
 }
 }

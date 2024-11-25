@@ -10,19 +10,58 @@ public class Product {
         Scanner sc = new Scanner(System.in);
         config conf = new config();
                      
+       String pname;
+    while (true) {
         System.out.print("Product Name: ");
-        String pname = sc.next();
-        System.out.print("Product Price: ");
-        double pprice = sc.nextDouble();      
-        System.out.print("Product Category: ");
-        String pcateg = sc.next();
-        System.out.print("Status: ");
-        String pstats = sc.next();
-        
-        String sql = "INSERT INTO product (p_name, p_price, p_category, p_status) VALUES (?, ?, ?, ?)";
-        
-        conf.addRecords(sql, pname, pprice, pcateg, pstats);
+        pname = sc.nextLine();
+        if (!pname.trim().isEmpty() && pname.matches("^[a-zA-Z0-9 ]+$")) {
+            break;
+        }
+        System.out.println("Invalid product name. Only letters, numbers, and spaces are allowed.");
     }
+
+    double pprice = 0.0;
+    while (true) {
+        System.out.print("Product Price: ");
+        if (sc.hasNextDouble()) {
+            pprice = sc.nextDouble();
+            if (pprice > 0) {
+                break;
+            } else {
+                System.out.println("Price must be greater than 0.");
+            }
+        } else {
+            System.out.println("Invalid input. Please enter a valid numeric price.");
+            sc.next(); 
+        }
+    }
+    sc.nextLine(); 
+
+    String pcateg;
+    while (true) {
+        System.out.print("Product Category: ");
+        pcateg = sc.nextLine();
+        if (!pcateg.trim().isEmpty() && pcateg.matches("^[a-zA-Z ]+$")) {
+            break;
+        }
+        System.out.println("Invalid category. Only letters and spaces are allowed.");
+    }
+
+    String pstats;
+    while (true) {
+        System.out.print("Status (Available/Unavailable): ");
+        pstats = sc.nextLine();
+        if (pstats.equalsIgnoreCase("Available")) {
+            break;
+        }
+        System.out.println("Invalid status. Please enter 'Available'.");
+    }
+
+    String sql = "INSERT INTO product (p_name, p_price, p_category, p_status) VALUES (?, ?, ?, ?)";
+    conf.addRecords(sql, pname, pprice, pcateg, pstats);
+
+    System.out.println("Product added successfully!");
+}
     
         public void viewProducts(){
             
@@ -38,27 +77,72 @@ public class Product {
         private void updateProducts(){
         Scanner sc = new Scanner(System.in);
         config conf = new config();
-        
-            System.out.println("Enter Product ID: ");
-            int pid = sc.nextInt();
-            
-            while(conf.getSingleValue("SELECT p_id FROM product WHERE p_id = ?", pid) == 0 ){
-            System.out.println("Selected ID doesn't exist!");
-            System.out.print("Select Product ID Again: ");
-            pid = sc.nextInt();
+        int pid = 0;
+        boolean validCustomer = false;
+
+  
+    while (!validCustomer) {
+        try {
+            System.out.print("Enter Existing Product ID: ");
+            pid = Integer.parseInt(sc.nextLine());
+            String psql = "SELECT COUNT(*) FROM product WHERE p_id = ?";
+            if (conf.getSingleValue(psql, pid) > 0) {
+                validCustomer = true;
+            } else {
+                System.out.println("Product does not exist. Please try again.");
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input. Please enter a valid Product ID.");
         }
+    }
             
-            System.out.print("Enter new Product Name: ");
-            String uname = sc.next();
-            
-            System.out.print("Enter new Product Price: ");
-            String uprice = sc.next();
-            
-            System.out.print("Enter new Product Category; ");
-            String ucateg = sc.next(); 
-            
-            System.out.println("Enter new Product Status: ");
-            String ustats = sc.next();
+            String uname;
+    while (true) {
+        System.out.print("Product Name: ");
+        uname = sc.nextLine();
+        if (!uname.trim().isEmpty() && uname.matches("^[a-zA-Z0-9 ]+$")) {
+            break;
+        }
+        System.out.println("Invalid product name. Only letters, numbers, and spaces are allowed.");
+    }
+
+    double uprice = 0.0;
+    while (true) {
+        System.out.print("Product Price: ");
+        if (sc.hasNextDouble()) {
+            uprice = sc.nextDouble();
+            if (uprice > 0) {
+                break;
+            } else {
+                System.out.println("Price must be greater than 0.");
+            }
+        } else {
+            System.out.println("Invalid input. Please enter a valid numeric price.");
+            sc.next(); 
+        }
+    }
+    sc.nextLine(); 
+
+    String ucateg;
+    while (true) {
+        System.out.print("Product Category: ");
+        ucateg = sc.nextLine();
+        if (!ucateg.trim().isEmpty() && ucateg.matches("^[a-zA-Z ]+$")) {
+            break;
+        }
+        System.out.println("Invalid category. Only letters and spaces are allowed.");
+    }
+
+    String ustats;
+    while (true) {
+        System.out.print("Status (Available): ");
+        ustats = sc.nextLine();
+        if (ustats.equalsIgnoreCase("Available")) {
+            break;
+        }
+        System.out.println("Invalid status. Please enter 'Available'.");
+    }
+
             
             String sql = "UPDATE product SET p_name = ?, p_price = ?, p_category = ?, p_status = ? WHERE p_id = ?";
                    
@@ -70,20 +154,31 @@ public class Product {
                
          Scanner sc = new Scanner(System.in);        
          config conf = new config();
-         System.out.print("Enter Product ID: ");
-         int pid = sc.nextInt();
-         
-        while(conf.getSingleValue("SELECT p_id FROM product WHERE p_id = ?", pid) == 0 ){
-        System.out.println("Selected ID doesn't exist!");
-        System.out.print("Select Product ID Again: ");
-        pid = sc.nextInt();
-        
+         int pid = 0;
+            boolean validInput = false;
+
+            while (!validInput) {
+            try {
+            System.out.print("Enter Product ID to Delete: ");
+            pid = Integer.parseInt(sc.nextLine()); 
+
+           
+            String sqlCheck = "SELECT COUNT(*) FROM product WHERE p_id = ?";
+            if (conf.getSingleValue(sqlCheck, pid) > 0) { 
+                validInput = true; 
+            } else {
+                System.out.println("Product ID does not exist. Please try again.");
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input. Please enter a valid numeric Product ID.");
         }
-        String sqlDelete = "DELETE FROM product WHERE p_id = ?";
-        
-       
-        conf.deleteRecords(sqlDelete, pid);
-    } 
+    }
+
+   
+    String sqlDelete = "DELETE FROM product WHERE p_id = ?";
+    conf.deleteRecords(sqlDelete, pid);
+    System.out.println("Customer " + pid + " has been successfully deleted.");
+}
         
         public void Products (){
         Scanner sc = new Scanner(System.in);
@@ -92,10 +187,10 @@ public class Product {
         do{
             System.out.println("--------------------");
             System.out.println("PRODUCT PANEL!");
-            System.out.println("1. ADD");
-            System.out.println("2. VIEW");
-            System.out.println("3. UPDATE");
-            System.out.println("4. DELETE");
+            System.out.println("1. ADD PRODUCT");
+            System.out.println("2. VIEW PRODUCT");
+            System.out.println("3. UPDATE PRODUCT");
+            System.out.println("4. DELETE PRODUCT");
             System.out.println("5. EXIT");
             
            

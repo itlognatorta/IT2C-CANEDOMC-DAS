@@ -50,8 +50,25 @@ public class Customer {
     
     private void updateCustomers(){
         Scanner sc = new Scanner(System.in);
-        System.out.println("Enter customer ID: ");
-        int id = sc.nextInt();
+        config conf = new config();
+        int id = 0;
+        boolean validCustomer = false;
+
+  
+    while (!validCustomer) {
+        try {
+            System.out.print("Enter Existing Customer ID: ");
+            id = Integer.parseInt(sc.nextLine());
+            String csql = "SELECT COUNT(*) FROM customer WHERE id = ?";
+            if (conf.getSingleValue(csql, id) > 0) {
+                validCustomer = true;
+            } else {
+                System.out.println("Customer does not exist. Please try again.");
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input. Please enter a valid Customer ID.");
+        }
+    }
         
         System.out.println("Enter new Customer First Name:");
         String ufname = sc.next();
@@ -85,8 +102,7 @@ public class Customer {
         String uaddress = sc.next();
         
         String sql = "UPDATE customer SET fname = ?, lname = ?, email = ?, Contactnum = ?, address = ? WHERE id = ?";
-        
-        config conf = new config();
+       
         conf.updateRecords(sql, ufname, ulname, uemail, ucontact, uaddress, id);
         
     
@@ -94,16 +110,33 @@ public class Customer {
 
     private void deleteCustomers() {      
          Scanner sc = new Scanner(System.in);        
-         System.out.print("Enter customer ID: ");
-         int id = sc.nextInt();
+         config conf = new config();
+            int id = 0;
+            boolean validInput = false;
 
-        String sqlDelete = "DELETE FROM customer WHERE id = ?";
-        
-        config conf = new config();
-        conf.deleteRecords(sqlDelete, id);
-    
+            while (!validInput) {
+            try {
+            System.out.print("Enter Customer ID to Delete: ");
+            id = Integer.parseInt(sc.nextLine()); 
+
+           
+            String sqlCheck = "SELECT COUNT(*) FROM customer WHERE id = ?";
+            if (conf.getSingleValue(sqlCheck, id) > 0) { 
+                validInput = true; 
+            } else {
+                System.out.println("Customer ID does not exist. Please try again.");
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input. Please enter a valid numeric Customer ID.");
+        }
     }
-            
+
+   
+    String sqlDelete = "DELETE FROM customer WHERE id = ?";
+    conf.deleteRecords(sqlDelete, id);
+    System.out.println("Customer " + id + " has been successfully deleted.");
+}
+        
                 
             public void Customers(){
                 
