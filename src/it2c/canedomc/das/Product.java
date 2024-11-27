@@ -49,7 +49,7 @@ public class Product {
 
     String pstats;
     while (true) {
-        System.out.print("Status (Available/Unavailable): ");
+        System.out.print("Status (Available): ");
         pstats = sc.nextLine();
         if (pstats.equalsIgnoreCase("Available")) {
             break;
@@ -95,17 +95,7 @@ public class Product {
             System.out.println("Invalid input. Please enter a valid Product ID.");
         }
     }
-            
-            String uname;
-    while (true) {
-        System.out.print("Product Name: ");
-        uname = sc.nextLine();
-        if (!uname.trim().isEmpty() && uname.matches("^[a-zA-Z0-9 ]+$")) {
-            break;
-        }
-        System.out.println("Invalid product name. Only letters, numbers, and spaces are allowed.");
-    }
-
+           
     double uprice = 0.0;
     while (true) {
         System.out.print("Product Price: ");
@@ -123,30 +113,20 @@ public class Product {
     }
     sc.nextLine(); 
 
-    String ucateg;
-    while (true) {
-        System.out.print("Product Category: ");
-        ucateg = sc.nextLine();
-        if (!ucateg.trim().isEmpty() && ucateg.matches("^[a-zA-Z ]+$")) {
-            break;
-        }
-        System.out.println("Invalid category. Only letters and spaces are allowed.");
-    }
-
     String ustats;
     while (true) {
-        System.out.print("Status (Available): ");
+        System.out.print("Status (Available/Unavailable): ");
         ustats = sc.nextLine();
-        if (ustats.equalsIgnoreCase("Available")) {
+        if (ustats.equalsIgnoreCase("Available") || ustats.equalsIgnoreCase("Unavailable")) {
             break;
         }
-        System.out.println("Invalid status. Please enter 'Available'.");
+        System.out.println("Invalid status. Please enter 'Available' or 'Unavailable'.");
     }
 
             
-            String sql = "UPDATE product SET p_name = ?, p_price = ?, p_category = ?, p_status = ? WHERE p_id = ?";
+            String sql = "UPDATE product SET  p_price = ?, p_status = ? WHERE p_id = ?";
                    
-            conf.updateRecords(sql, uname, uprice, ucateg, ustats, pid);           
+            conf.updateRecords(sql, uprice, ustats, pid);           
             
         }
         
