@@ -15,22 +15,22 @@ public class Customer {
     while (true) {
         System.out.print("Customers Email (e.g., example@domain.com): ");
          email = sc.next();
-        if (email.matches("^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,6}$")) { // Email format regex
+        if (email.matches("^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,6}$")) { 
             break;
         } else {
             System.out.print("Invalid email format! Please try again.");
         }
     }       
     String contact;
-    while (true) {
-        System.out.print("Customers Contact Number (digits only): ");
-        contact = sc.next();
-        if (contact.matches("\\d+")) { 
-            break;
-        } else {
-            System.out.print("Invalid input! Please enter digits only.");
-        }
+   while (true) {
+    System.out.print("Customer's Contact Number (11 digits only): ");
+    contact = sc.next();
+    if (contact.matches("\\d{11}")) { 
+        break;
+    } else {
+        System.out.println("Invalid input! Please enter a valid 11-digit number.");
     }
+}
         System.out.print("Customers Address: ");
         String address = sc.next();
         
@@ -114,15 +114,19 @@ public class Customer {
             int id = 0;
             boolean validInput = false;
 
-            while (!validInput) {
-            try {
+             while (!validInput) {
+        try {
             System.out.print("Enter Customer ID to Delete: ");
-            id = Integer.parseInt(sc.nextLine()); 
+            id = Integer.parseInt(sc.nextLine());
 
-           
             String sqlCheck = "SELECT COUNT(*) FROM customer WHERE id = ?";
-            if (conf.getSingleValue(sqlCheck, id) > 0) { 
-                validInput = true; 
+            if (conf.getSingleValue(sqlCheck, id) > 0) {
+                String sqlReferenceCheck = "SELECT COUNT(*) FROM tbl_order WHERE id = ?";
+                if (conf.getSingleValue(sqlReferenceCheck, id) > 0) {
+                    System.out.println("Customer cannot be deleted because it is referenced in other records (e.g., tbl_orders).");
+                } else {
+                    validInput = true;
+                }
             } else {
                 System.out.println("Customer ID does not exist. Please try again.");
             }

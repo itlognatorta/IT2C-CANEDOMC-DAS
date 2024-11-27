@@ -47,7 +47,7 @@ public class Reports {
                 + "WHERE tbl_order.id = ?";
         
         String[] hdrs = {"Order ID", "Customer's Name", "Product Name", "Due Amount", "Order Date", "Order Status"};
-        String[] colmns = {"o_id",     "fname",      "p_name",      "o_due",       "o_date",     "o_status"};
+        String[] colmns = {"o_id","fname","p_name","o_due","o_date","o_status"};
         
         System.out.println("=== SPECIFIC REPORT FOR CUSTOMER ID: " + customerId + " ===");
         conf.viewRecords1(query, hdrs, colmns, customerId);

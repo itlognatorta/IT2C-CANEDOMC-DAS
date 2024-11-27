@@ -157,15 +157,20 @@ public class Product {
          int pid = 0;
             boolean validInput = false;
 
-            while (!validInput) {
-            try {
+             while (!validInput) {
+        try {
             System.out.print("Enter Product ID to Delete: ");
-            pid = Integer.parseInt(sc.nextLine()); 
+            pid = Integer.parseInt(sc.nextLine());
 
-           
             String sqlCheck = "SELECT COUNT(*) FROM product WHERE p_id = ?";
-            if (conf.getSingleValue(sqlCheck, pid) > 0) { 
-                validInput = true; 
+            if (conf.getSingleValue(sqlCheck, pid) > 0) {
+                String sqlReferenceCheck = "SELECT COUNT(*) FROM tbl_order WHERE p_id = ?";
+                if (conf.getSingleValue(sqlReferenceCheck, pid) > 0) {
+                    System.out.println("Product cannot be deleted because it is referenced in other records (e.g., tbl_orders).");
+                } else {
+                    validInput = true; 
+    
+                }
             } else {
                 System.out.println("Product ID does not exist. Please try again.");
             }

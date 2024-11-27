@@ -232,6 +232,23 @@ public static Connection connectDB() {
         }
         return result; 
     }
+
+    public void executeUpdate(String sqlDelete, int id) {
+    try (Connection conn = this.connectDB();
+         PreparedStatement stmt = conn.prepareStatement(sqlDelete)) {
+
+        stmt.setInt(1, id);
+        int rowsAffected = stmt.executeUpdate();
+
+        if (rowsAffected > 0) {
+            System.out.println("Operation successful: " + rowsAffected + " row(s) affected.");
+        } else {
+            System.out.println("Operation failed: No rows affected.");
+        }
+    } catch (SQLException e) {
+        System.err.println("SQL Error: " + e.getMessage());
+    }
+}
 }
 
 
