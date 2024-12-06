@@ -30,9 +30,17 @@ public class Customer {
     } else {
         System.out.println("Invalid input! Please enter a valid 11-digit number.");
     }
+   }
+       String address;
+    while (true) {
+    System.out.print("Customer's Address: ");
+    address = sc.nextLine();
+   
+    if (!address.trim().isEmpty() && address.matches("^[a-zA-Z0-9 ]+$")) {
+        break;
+    }
+    System.out.println("Only letters, numbers, and spaces are allowed.");
 }
-        System.out.print("Customers Address: ");
-        String address = sc.next();
         
         String sql = "INSERT INTO customer (fname, lname, email, contactnum, address) VALUES (?, ?, ?, ?, ?)";
         
